@@ -13,7 +13,7 @@
 Создание группы производится практически аналогичной командой **groupadd** - `sudo groupadd admin`. после этого можно добавить туда пользователей командой **usermod** с ключами -aG - `sudo usermod -aG admin Username`. Для проверки выполним команду `id username` которая покажет группы, к которым принадлежит пользователь. Как итог - в группе админ есть добавленные пользователи (пользователь _root_ был добавлен аналогично)
 
 ![](https://raw.githubusercontent.com/buster42b/linadmin/main/lab3/Снимок%20экрана%20от%202020-12-21%2000-24-22.png)
-![](https://sun9-42.userapi.com/impg/5BHuROHKUvlE7eU-8Z0WogH8mUmxnffKfMgu1A/J1weKzzFWpI.jpg?size=540x73&quality=96&proxy=1&sign=cb833e1e0c7c03d937907cf726d403b2)
+![](https://raw.githubusercontent.com/buster42b/linadmin/main/lab3/Снимок%20экрана%20от%202020-12-21%2000-25-01.png)
 
 ## 3. Запретить всем пользователям, не входящим в группу admin, логин по ssh в выходные (не учитывая праздники).
 Для этого нам понадобятся пакеты **SSH** (возможно в базовой комплектации ОС этот модуль установлен неполностью)и **PAM** (Pluggable Authentication Module) - установим их командами `sudo yum install pam pam_script openssh-server openssh-clients` для Centos и `sudo apt-get install libpam-script ssh` для других ОС. После установки переходим в файл **pam_scrript_acct** и вносим следующие изменения:
@@ -44,7 +44,7 @@ fi
 ```
 Далее выдаём скрипту права на исполнение командой `sudo chmod +x`. после этого вносим в файл `/etc/pam.d/sshd` строку `account    required    pam_script.so` 
 
-![](https://sun9-56.userapi.com/impg/EnH5sbOL9zW2FoGE5Ww1kswp5P3rb77PWzLXVw/IyBkgjPWu0E.jpg?size=865x401&quality=96&proxy=1&sign=46eb465d2a95b9b2dc1d7d5592d58daf)
+![](https://raw.githubusercontent.com/buster42b/linadmin/main/lab3/Снимок%20экрана%20от%202020-12-21%2000-19-45.png)
 
 # Часть 2. Работа с правами docker.
 ## 1. Установить докер
