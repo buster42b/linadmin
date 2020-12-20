@@ -3,7 +3,7 @@
 Для создания пользователя используется команда **useradd** с ключами -d ( directory ) для указания директории и -s ( shell ) для указания пути до оболочки - bash, Zsh и т.д. - `sudo useradd -d /home/Dirname -s /path/to/shell Username`.
 для добавления пароля используется команда **passwd** `sudo passwd Username`, после чего вводим и повторяем пароль (возможно сообщение о недостаточной сложности пароля, но оно не блокирует его использование если не созданы соответствующие политики).
 
-![](https://sun9-54.userapi.com/impg/EU_Y0x-jyMCuKbfk_VXosMCr5As10yDCb8eXJA/UICYqimNMo8.jpg?size=766x126&quality=96&proxy=1&sign=4a14b538626d8257e01e3597109c69be)
+![](https://raw.githubusercontent.com/buster42b/linadmin/main/lab3/Снимок%20экрана%20от%202020-12-21%2000-16-42.png)
 
 Производим те же действия для создания ещё нескольких пользователей:
 
