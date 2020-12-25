@@ -1,24 +1,30 @@
 # ДЗ 6 поставка ПО
 
-Устанавливаем необходимые пакеты:
+
+1. Устанавливаем необходимые пакеты:
 
 yum install -y redhat-lsb-core wget rpmdevtools rpm-build createrepo yum-utils
+
 
 Загружаем SRPM пакет NGINX:
 
 wget https://nginx.org/packages/centos/7/SRPMS/nginx-1.18.0-2.el7.ngx.src.rpm
 
+
 Создаем древо каталогов для сборки:
 
 rpm -i nginx-1.18.0-2.el7.ngx.src.rpm
+
 
 Качаем исходники для openssl:
 
 wget https://www.openssl.org/source/latest.tar.gz
 tar -xvf latest.tar.gz
 
+
 Ставим зависимости:
 yum-builddep rpmbuild/SPECS/nginx.spec
+
 
 Ставим spec файл чтобы NGINX собирался как надо.
 Секция build:
@@ -29,35 +35,45 @@ yum-builddep rpmbuild/SPECS/nginx.spec
         --with-ld-opt="%{WITH_LD_OPT}" \
         --with-openssl=/root/openssl-1.1.1i \
         --with-debug
+        
 
-Теперь можно приступить к сборке RPM пакета:
+Собираем RPM пакет:
+
 rpmbuild -bb rpmbuild/SPECS/nginx.spec
 
-Убедимся что пакеты создались:
+
+Проверяем создание пакетов:
+
 ls -la rpmbuild/RPMS/x86_64/
 
-Теперь можно установить наш пакет и убедиться что nginx работает
+
+Устанавливаем пакет, проверяем работу ngix:
+
 yum localinstall -y rpmbuild/RPMS/x86_64/nginx-1.18.0-2.el7.ngx.x86_64.rpm
 systemctl start nginx
 systemctl status nginx
 
+
 Далее мы будем использовать его для доступа к своему репозиторию
 
-2. Теперь приступим к созданию своего репозитория.
+2. Создаем свой репозиторий.
 
-Директория для статики у NGINX по умолчанию /usr/share/nginx/html
+Создаем каталог repo в директории статики ngix:
 
-Создадим там каталог repo:
 mkdir /usr/share/nginx/html/repo
 
-Копируем туда наш собранный RPM и, например, RPM для установки репозитория Percona-Server:
+
+Кидаем туда наш RPM и RPM для установки репозитория Percona-Server:
+
 cp rpmbuild/RPMS/x86_64/nginx-1.18.0-2.el7.ngx.x86_64.rpm /usr/share/nginx/html/repo/
 wget https://repo.percona.com/centos/7Server/RPMS/noarch/percona-release-1.0-9.noarch.rpm -O /usr/share/nginx/html/repo/percona-release-1.0-9.noarch.rpm
 
-Инициализируем репозиторий командой:
+
+Инициализируем репозиторий:
+
 createrepo /usr/share/nginx/html/repo/
 
-    Spawning worker 0 with 2 pkgs (Видим что в репозитории два пакета)
+    Spawning worker 0 with 2 pkgs 
     Workers Finished
     Saving Primary metadata
     Saving file lists metadata
@@ -65,7 +81,8 @@ createrepo /usr/share/nginx/html/repo/
     Generating sqlite DBs
     Sqlite DBs complete
 
-Для прозрачности настроим в NGINX доступ к листингу каталога:
+Настроим в NGINX доступ к листингу каталога:
+
 В location / в файле /etc/nginx/conf.d/default.conf добавим директиву autoindex on. В результате location будет выглядеть так:
 
     location / {
@@ -74,7 +91,9 @@ createrepo /usr/share/nginx/html/repo/
         autoindex on;
     }
 
+
 Проверяем синтаксис и перезапускаем NGINX:
+
 nginx -t
 
     nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
@@ -82,7 +101,9 @@ nginx -t
 
 nginx -s reload
 
-Теперь ради интереса можно посмотреть в браузере или curl-ануть:
+
+Можно посмотреть в браузере или запросить через curl:
+
 curl -a http://localhost/repo/
 
     <html>
@@ -95,7 +116,8 @@ curl -a http://localhost/repo/
     </pre><hr></body>
     </html>
 
-Все готово для того, чтобы протестировать репозиторий! Добавим его в /etc/yum.repos.d:
+
+Добавим репозиторий в /etc/yum.repos.d:
 
 cat >> /etc/yum.repos.d/mai.repo << EOF
 [mai]
@@ -105,16 +127,23 @@ gpgcheck=0
 enabled=1
 EOF
 
-Убедимся что репозиторий подключился и посмотрим что в нем есть:
+Смотрим, что в репозитории:
+
 yum repolist enabled | grep mai
 
-Переустановим nginx из нашего репозитория:
+
+Переустанавливаем nginx из нашего репозитория:
+
 yum reinstall nginx
 
+
 Посмотрим список всех пакетов, отфильтровав их:
+
 yum list | grep mai
 
-Установим репозиторий percona-release из нашего репозитория:
+
+Устанавливаем репозиторий percona-release оттуда же:
+
 yum install percona-release -y
 
 </details>
