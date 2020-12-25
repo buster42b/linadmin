@@ -1,15 +1,19 @@
 # ДЗ 6 поставка ПО
 
 Устанавливаем необходимые пакеты:
+
 yum install -y redhat-lsb-core wget rpmdevtools rpm-build createrepo yum-utils
 
 Загружаем SRPM пакет NGINX:
+
 wget https://nginx.org/packages/centos/7/SRPMS/nginx-1.18.0-2.el7.ngx.src.rpm
 
 Создаем древо каталогов для сборки:
+
 rpm -i nginx-1.18.0-2.el7.ngx.src.rpm
 
 Качаем исходники для openssl:
+
 wget https://www.openssl.org/source/latest.tar.gz
 tar -xvf latest.tar.gz
 
